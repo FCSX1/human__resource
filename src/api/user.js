@@ -12,7 +12,7 @@ export function login(data) {
 /*
 获取用户资料接口
 */
-export function getInfo() {
+export function getUersInfo() {
   return request({
     url: '/sys/profile',
     method: 'post'

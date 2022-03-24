@@ -8,8 +8,7 @@ const state = {
 const mutations = {
   setToken(state, token) {
     state.token = token // 将数据设置给vuex
-    // 同步给缓存
-    setToken(token)
+    setToken(token) // 同步给缓存
   },
   removeToken(state) {
     state.token = null // 将vuex的数据清空

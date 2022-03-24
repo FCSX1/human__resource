@@ -37,15 +37,14 @@ module.exports = {
       errors: true
     },
     // 配置反向代理
-    Proxy: {
+    proxy: {
       // 当地址中有/api的时候会触发代理机制
       '/api': {
         target: 'http://ihrm-java.itheima.net', // 要代理的服务器地址  这里不用写api
-        changeOrigi: true // 是否跨域
+        changeOrigin: true // 是否跨域
         // 重写路径
         // pathRewrite: {}
-      },
-      '/heima': {}
+      }
     }
   },
   configureWebpack: {

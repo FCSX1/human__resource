@@ -2,7 +2,6 @@ import request from '@/utils/request'
 
 /* 登录接口的封装 */
 export function login(data) {
-  console.log(111)
   // 返回一个promise对象
   return request({
     url: '/sys/login',

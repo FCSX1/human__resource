@@ -135,8 +135,6 @@ export default {
 
       this.$refs.loginForm.validate(async isOK => {
         if (isOK) {
-          console.log(1111)
-
           this.loading = true
           // 只有校验通过了 我们才去调用action
           await this['user/login'](this.loginForm)

@@ -9,9 +9,14 @@ export function login(data) {
     data // 请求体参数  ES6写法变量名和参数名一致时可以简写
   })
 }
-
+/*
+获取用户资料接口
+*/
 export function getInfo() {
-  return request({})
+  return request({
+    url: '/sys/profile',
+    method: 'post'
+  })
 }
 
 export function logout() {

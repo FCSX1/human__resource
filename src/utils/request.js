@@ -12,7 +12,7 @@ service.interceptors.request.use(config => {
   // config 是请求的配置信息
   // 注入 token
   if (store.getters.token) {
-    config.headers['Authorization'] = `Bearer${store.getters.token}`
+    config.headers['Authorization'] = `Bearer ${store.getters.token}`
   }
   return config // 必须要返回的
 }, error => {

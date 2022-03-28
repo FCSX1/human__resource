@@ -1,6 +1,6 @@
 <template>
   <!-- 放置弹出组件 -->
-  <el-dialog title="新增部门" :visible="true">
+  <el-dialog title="新增部门" :visible="showDialog">
     <!-- 表单数据 label-width设置标题的宽度 -->
     <el-form label-width="120px">
       <el-form-item label="部门名称">
@@ -37,7 +37,12 @@
 
 <script>
 export default {
-
+  props: {
+    showDialog: {
+      type: Boolean,
+      default: false
+    }
+  }
 }
 </script>
 

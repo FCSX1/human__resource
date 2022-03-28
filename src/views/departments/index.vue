@@ -13,16 +13,20 @@
         </el-tree>
       </el-card>
     </div>
+    <!-- 放置新增弹层 -->
+    <AddDept />
   </div>
 </template>
 
 <script>
 import { getDepartments } from '@/api/departments'
-import TreeTools from './tree-tools.vue'
+import AddDept from './components/add-dept.vue'
+import TreeTools from './components/tree-tools.vue'
 import { tranListToTreeData } from '@/utils/index'
 export default {
   components: {
-    TreeTools
+    TreeTools,
+    AddDept
   },
   data() {
     return {

@@ -12,7 +12,7 @@ export function getDepartments() {
 /*
 * 删除组织架构的部门
 */
-export function dalDepartments(id) {
+export function delDepartments(id) {
   return request({
     url: `/company/department/${id}`,
     method: 'delete' // 接口满足restful 接口规范

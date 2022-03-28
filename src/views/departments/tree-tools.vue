@@ -23,8 +23,8 @@
             <el-dropdown-menu slot="dropdown">
               <!-- 下拉选项 -->
               <el-dropdown-item>添加子部门</el-dropdown-item>
-              <el-dropdown-item>编辑部门</el-dropdown-item>
-              <el-dropdown-item>删除部门</el-dropdown-item>
+              <el-dropdown-item v-if="!isRoot">编辑部门</el-dropdown-item>
+              <el-dropdown-item v-if="!isRoot">删除部门</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </el-col>
@@ -41,6 +41,10 @@ export default {
     treeNode: {
       required: true, // 对象类型
       type: Object // 要求对方使用您的组件的时候，必须传treeNode属性，如果不传 就会报错
+    },
+    isRoot: {
+      type: Boolean,
+      default: false
     }
 
   }

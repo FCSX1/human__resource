@@ -2,9 +2,20 @@
   <!-- 放置弹出组件 -->
   <el-dialog title="新增部门" :visible="showDialog">
     <!-- 表单数据 label-width设置标题的宽度 -->
-    <el-form label-width="120px">
-      <el-form-item label="部门名称" prop="name">
-        <el-input v-model="formData.name" style="width:80%" placeholder="1-50个字符">
+    <el-form
+      :model="formData"
+      :rules="rules"
+      label-width="120px"
+    >
+      <el-form-item
+        label="部门名称"
+        prop="name"
+      >
+        <el-input
+          v-model="formData.name"
+          style="width:80%"
+          placeholder="1-50个字符"
+        >
           <!--  -->
         </el-input>
       </el-form-item>
@@ -47,12 +58,31 @@ export default {
     return {
       // 定义一个表单数据
       formData: {
-        name: '',
-        code: '',
-        manager: '',
-        introduce: ''
+        name: '', // 部门名称
+        code: '', // 部门编码
+        manager: '', // 部门管理者
+        introduce: '' // 部门介绍
       },
-      rules: {} // 校验规则 {key:数组}
+      rules: {
+        name: [
+          { required: true, message: '部门名称不能为空', trigger: 'blur' },
+          { min: 1, max: 50, message: '部门名称长度为1-50个字符', trigger: 'blur' }
+        ],
+
+        code: [
+          { required: true, message: '部门编码不能为空', trigger: 'blur' },
+          { min: 1, max: 50, message: '部门编码长度为1-50个字符', trigger: 'blur' }
+        ],
+
+        manager: [
+          { required: true, message: '部门负责人不能为空', trigger: 'blur' }
+        ],
+
+        introduce: [
+          { required: true, message: '部门介绍不能为空', trigger: 'blur' },
+          { min: 1, max: 300, message: '部门介绍长度为1-300个字符', trigger: 'blur' }
+        ]
+      } // 校验规则 {key:数组}
     }
   }
 }

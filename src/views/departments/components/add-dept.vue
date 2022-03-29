@@ -3,6 +3,7 @@
   <el-dialog title="新增部门" :visible="showDialog">
     <!-- 表单数据 label-width设置标题的宽度 -->
     <el-form
+      ref="deptForm"
       :model="formData"
       :rules="rules"
       label-width="120px"
@@ -49,14 +50,14 @@
     <el-row slot="footer" type="flex" justify="center">
       <el-col :span="6">
         <el-button size="small">取消</el-button>
-        <el-button size="small" type="primary">确认</el-button>
+        <el-button size="small" type="primary" @click="btnOK">确认</el-button>
       </el-col>
     </el-row>
   </el-dialog>
 </template>
 
 <script>
-import { getDepartments } from '@/api/departments'
+import { getDepartments, addDepartments } from '@/api/departments'
 import { getEmployeeSimple } from '@/api/employees'
 export default {
   props: {
@@ -124,6 +125,18 @@ export default {
   methods: {
     async getEmployeeSimle() {
       this.peoples = await getEmployeeSimple()
+    },
+    btnOK() {
+      // 手动校验表单
+      this.$refs.deptForm.validate(async isOK => {
+        if (isOK) {
+          // 表单校验通过
+          // 这里我们将ID设成了我们的pid
+          await addDepartments({ ...this.formData, pid: this.treeNode.id })
+          // 告诉父组件
+          this.$emit('') // 触发一个自定义事件
+        }
+      })
     }
   }
 }

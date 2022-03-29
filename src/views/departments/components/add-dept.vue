@@ -1,6 +1,6 @@
 <template>
   <!-- 放置弹出组件 -->
-  <el-dialog title="新增部门" :visible="showDialog">
+  <el-dialog title="新增部门" :visible="showDialog" @close="btnCancel">
     <!-- 表单数据 label-width设置标题的宽度 -->
     <el-form
       ref="deptForm"
@@ -49,7 +49,7 @@
     <!-- 确认和消息 -->
     <el-row slot="footer" type="flex" justify="center">
       <el-col :span="6">
-        <el-button size="small">取消</el-button>
+        <el-button size="small" @click="btnCancel">取消</el-button>
         <el-button size="small" type="primary" @click="btnOK">确认</el-button>
       </el-col>
     </el-row>
@@ -138,8 +138,15 @@ export default {
           // 此时应该去修改showDialog值
           // 自定义事件的格式是 update:props名称
           this.$emit('update:showDialog', false)
+          // 关闭dialog的时候会 触发el-dialog的close事件  所以这里不需要再单独的重置数据了
         }
       })
+    },
+    btnCancel() {
+      // 关闭弹层
+      this.$emit('update:showDialog', false)
+      // 清除之前的校验数据
+      this.$refs.deptForm.resetFields()
     }
   }
 }

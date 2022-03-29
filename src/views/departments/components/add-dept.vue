@@ -27,8 +27,17 @@
       </el-form-item>
 
       <el-form-item label="部门负责人" prop="manager">
-        <el-select v-model="formData.manager" style="width:80%" placeholder="请选择">
-          <!--  -->
+        <!-- native修饰符 可以找到原生元素的事件 -->
+        <el-select v-model="formData.manager" style="width:80%" placeholder="请选择" @focus="getEmployeeSimle">
+          <!-- 遍历选项 -->
+          <el-option
+            v-for="item in peoples"
+            :key="item.id"
+            :label="item.username"
+            :value="item.username"
+          >
+            <!--  -->
+          </el-option>
         </el-select>
       </el-form-item>
 
@@ -48,6 +57,7 @@
 
 <script>
 import { getDepartments } from '@/api/departments'
+import { getEmployeeSimple } from '@/api/employees'
 export default {
   props: {
     showDialog: {
@@ -107,7 +117,13 @@ export default {
           { required: true, message: '部门介绍不能为空', trigger: 'blur' },
           { min: 1, max: 300, message: '部门介绍长度为1-300个字符', trigger: 'blur' }
         ]
-      } // 校验规则 {key:数组}
+      }, // 校验规则 {key:数组}
+      peoples: []
+    }
+  },
+  methods: {
+    async getEmployeeSimle() {
+      this.peoples = await getEmployeeSimple()
     }
   }
 }

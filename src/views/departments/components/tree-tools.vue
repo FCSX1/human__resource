@@ -58,6 +58,7 @@ export default {
         this.$emit('addDepts', this.treeNode) // 触发自定义事件 告诉父组件 显示弹层
       } else if (type === 'edit') {
         // 编辑部门
+        this.$emit('editDepts', this.treeNode) // 触发自定义事件 点击谁 编辑谁
       } else {
         // 删除部门
         this.$confirm('确认删除吗?').then(() => {

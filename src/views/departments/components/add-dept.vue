@@ -134,7 +134,10 @@ export default {
           // 这里我们将ID设成了我们的pid
           await addDepartments({ ...this.formData, pid: this.treeNode.id })
           // 告诉父组件
-          this.$emit('') // 触发一个自定义事件
+          this.$emit('addDepts') // 触发一个自定义事件
+          // 此时应该去修改showDialog值
+          // 自定义事件的格式是 update:props名称
+          this.$emit('update:showDialog', false)
         }
       })
     }

@@ -1,6 +1,6 @@
 <template>
   <!-- 放置弹出组件 -->
-  <el-dialog title="新增部门" :visible="showDialog" @close="btnCancel">
+  <el-dialog :title="showTitle" :visible="showDialog" @close="btnCancel">
     <!-- 表单数据 label-width设置标题的宽度 -->
     <el-form
       ref="deptForm"
@@ -122,6 +122,11 @@ export default {
       peoples: []
     }
   },
+  computed: {
+    showTitle() {
+      return this.formData.id ? '编辑部门' : '新增子部门'
+    }
+  },
   methods: {
     async getEmployeeSimle() {
       this.peoples = await getEmployeeSimple()
@@ -149,9 +154,16 @@ export default {
       })
     },
     btnCancel() {
+      // 重置数据  因为resetFields 只能重置 表单上的数据 非表单上的比如 编辑中id 不能重置
+      this.formData = {
+        name: '',
+        code: '',
+        manager: '',
+        introduce: ''
+      }
       // 关闭弹层
       this.$emit('update:showDialog', false)
-      // 清除之前的校验数据
+      // 清除之前的校验数据   可以重置数据  只能重置  定义在data中的数据
       this.$refs.deptForm.resetFields()
     }
   }

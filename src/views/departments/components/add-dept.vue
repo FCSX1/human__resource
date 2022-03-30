@@ -77,15 +77,35 @@ export default {
       const { depts } = await getDepartments()
       // 去找同级部门下 有没有和value相同的数据
       // 找到同级部门的所有的子部门
-      const isRepeat = depts.filter(item => item.pid === this.treeNode.id).some(item => item.name === value)
+      let isRepeat = false
+      if (this.formData.id) {
+        // 有id就是编辑模式
+        // 编辑的数据  在数据库里有  同级部门下 我的名字不能和其他的同级部门的名字进行重复
+        // 首先要找到我的同级部门  this.formData.id  就是我当前的id 我的pid是 this.formData.pid
+        depts.filter(item => item.pid === this.formData.pids)
+        depts.filter(item => item.pid === this.treeNode.pids)
+      } else {
+        // 没有id就是新增模式
+        isRepeat = depts.filter(item => item.pid === this.treeNode.id).some(item => item.name === value)
+      }
+
       // 如果isRepeat为true  表示找到了一样的名字
       isRepeat ? callback(new Error(`同级部门下已经存在这个${value}部门了`)) : callback()
     }
 
     const checkCodeRepeat = async(rule, value, callback) => {
       const { depts } = await getDepartments()
+      let isRepeat = false
+      if (this.formData.id) {
+        // 编辑模式下
+        // 要求是 不能有一样的code
+        isRepeat = depts.filter(item => item.id !== this.treeNode.id).some(item => item.code === value && value)
+      } else {
+        // 新增模式下
+        isRepeat = depts.some(item => item.code === value && value)
+      }
       // 要求编码 和所有的部门编码都不能重复 由于历史数据有可能 没有code 所以说这里加一个强制性条件就是 value值不为空
-      const isRepeat = depts.some(item => item.code === value && value)
+
       isRepeat ? callback(new Error(`组织架构下已经存在这个${value}编码了`)) : callback()
     }
     return {

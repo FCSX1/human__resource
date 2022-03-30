@@ -59,26 +59,52 @@
           </el-tab-pane>
           <el-tab-pane alo label="公司信息">
             <!-- 右侧的内容 -->
+            <!-- 并不是所有的表单都需要 model rules -->
             <el-alert type="info" :show-icon="true" :closable="false" title="对公司名、公司地址、营业执照、公司地区的更新，将使得公司资料被重叠审核，请谨慎修改" />
-            <el-form label-width="120px" style="margin-top: 50px">
+            <el-form
+              label-width="120px"
+              style="margin-top: 50px"
+            >
               <el-form-item label="企业名称">
-                <el-input disabled style="width: 400px" />
+                <el-input
+                  v-model="formData.name"
+                  disabled
+                  style="width: 400px"
+                />
               </el-form-item>
 
               <el-form-item label="公司地址">
-                <el-input disabled style="width: 400px" />
+                <el-input
+                  v-model="formData.companyAddress"
+                  disabled
+                  style="width: 400px"
+                />
               </el-form-item>
 
               <el-form-item label="公司电话">
-                <el-input disabled style="width: 400px" />
+                <el-input
+                  v-model="formData.companyPhone"
+                  disabled
+                  style="width: 400px"
+                />
               </el-form-item>
 
               <el-form-item label="邮箱">
-                <el-input disabled style="width: 400px" />
+                <el-input
+                  v-model="formData.mailbox"
+                  disabled
+                  style="width: 400px"
+                />
               </el-form-item>
 
               <el-form-item label="备注">
-                <el-input type="textarea" :rows="3" disabled style="width: 400px" />
+                <el-input
+                  v-model="formData.remarks"
+                  type="textarea"
+                  :rows="3"
+                  disabled
+                  style="width: 400px"
+                />
               </el-form-item>
             </el-form>
           </el-tab-pane>
@@ -89,7 +115,8 @@
 </template>
 
 <script>
-import { getRoleList } from '@/api/setting'
+import { getRoleList, getCompanyInfo } from '@/api/setting'
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -99,17 +126,27 @@ export default {
         page: 1,
         pagesize: 10,
         total: 0 // 记录总数
+      },
+      formData: {
+        // 公司信息
       }
     }
   },
+  computed: {
+    ...mapGetters(['companyId'])
+  },
   created() {
     this.getRoleList() // 获取角色列表
+    this.getCompanyInfo()
   },
   methods: {
     async getRoleList() {
       const { total, rows } = await getRoleList(this.page)
       this.page.total = total
       this.list = rows
+    },
+    async getCompanyInfo() {
+      this.formData = await getCompanyInfo(this.companyId) // 赋值给formData
     },
     changePage(newPage) {
       // newPage 是当前点击的页码

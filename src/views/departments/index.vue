@@ -14,7 +14,7 @@
       </el-card>
     </div>
     <!-- 放置新增弹层 -->
-    <AddDept :show-dialog.sync="showDialog" :tree-node="node" @addDepts="getDepartments" />
+    <AddDept ref="addDept" :show-dialog.sync="showDialog" :tree-node="node" @addDepts="getDepartments" />
   </div>
 </template>
 
@@ -58,6 +58,8 @@ export default {
     editDepts(node) {
       this.showDialog = true // 弹出层
       this.node = node // 赋值操作的节点
+      // 应该在这里调用获取部门详情的方法
+      this.$refs.addDept.getDepartDetail(node.id)
     }
   }
 }

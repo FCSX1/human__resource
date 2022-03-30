@@ -125,6 +125,7 @@
     <!-- 放置一个弹层组件 -->
     <el-dialog title="编辑部门" :visible="showDialog">
       <el-form
+        ref="roleForm"
         :model="roleForm"
         :rules="rules"
         label-width="120px"
@@ -140,8 +141,8 @@
       <!-- 放置一个footer插槽 -->
       <el-row type="flex" justify="center">
         <el-col :span="8">
-          <el-button size="small">取消</el-button>
-          <el-button type="primary" size="small">确定</el-button>
+          <el-button size="small" @click="btnCancel">取消</el-button>
+          <el-button type="primary" size="small" @click="btnOK">确定</el-button>
         </el-col>
       </el-row>
     </el-dialog>
@@ -149,7 +150,7 @@
 </template>
 
 <script>
-import { getRoleList, getCompanyInfo, deleteRole } from '@/api/setting'
+import { getRoleList, getCompanyInfo, deleteRole, getRoleDetail, updateRole } from '@/api/setting'
 import { mapGetters } from 'vuex'
 export default {
   data() {
@@ -210,9 +211,30 @@ export default {
         console.log(error)
       }
     },
-    editRole(id) {
+    async editRole(id) {
+      this.roleForm = await getRoleDetail(id) // 实现数据回写
       this.showDialog = true // 显示弹层
-    }
+    },
+    async btnOK() {
+      try {
+        await this.$refs.roleForm.validate()
+        // 只用校验通过的情况下  才会执行await的下方内容
+        // roleForm这个对象有id就是编辑  没有id就是新增
+        if (this.roleForm.id) {
+          await updateRole(this.roleForm)
+        } else {
+          // 新增业务
+        }
+
+        // 重新拉取数据
+        this.getRoleList()
+        this.$message.success('操作成功')
+        this.showDialog = false
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    btnCancel() {}
   }
 }
 </script>

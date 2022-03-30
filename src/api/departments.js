@@ -43,3 +43,14 @@ export function getDepartDetail(id) {
     url: `/company/department/${id}`
   })
 }
+
+/*
+*  保存编辑的数据
+*/
+export function updateDepartments(data) {
+  return request({
+    url: `/company/department/${data.id}`,
+    method: 'put',
+    data
+  })
+}

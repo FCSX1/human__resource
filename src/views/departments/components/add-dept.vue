@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { getDepartments, addDepartments, getDepartDetail } from '@/api/departments'
+import { getDepartments, addDepartments, getDepartDetail, updateDepartments } from '@/api/departments'
 import { getEmployeeSimple } from '@/api/employees'
 export default {
   props: {
@@ -141,9 +141,15 @@ export default {
       // 手动校验表单
       this.$refs.deptForm.validate(async isOK => {
         if (isOK) {
+          if (this.formData.id) {
+            // 编辑
+            await updateDepartments(this.formData)
+          } else {
+            // 这里我们将ID设成了我们的pid
+            await addDepartments({ ...this.formData, pid: this.treeNode.id })
+          }
           // 表单校验通过
-          // 这里我们将ID设成了我们的pid
-          await addDepartments({ ...this.formData, pid: this.treeNode.id })
+
           // 告诉父组件
           this.$emit('addDepts') // 触发一个自定义事件
           // 此时应该去修改showDialog值

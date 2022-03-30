@@ -11,6 +11,7 @@
                 type="primary"
                 icon="el-icon-plus"
                 size="small"
+                @click="showDialog = true"
               >新增角色</el-button>
             </el-row>
             <!-- 给表格绑定数据 -->
@@ -123,7 +124,8 @@
       </el-card>
     </div>
     <!-- 放置一个弹层组件 -->
-    <el-dialog title="编辑部门" :visible="showDialog">
+    <!-- close事件 在点击确定的时候会触发 -->
+    <el-dialog title="编辑部门" :visible="showDialog" @close="btnCancel">
       <el-form
         ref="roleForm"
         :model="roleForm"
@@ -150,7 +152,7 @@
 </template>
 
 <script>
-import { getRoleList, getCompanyInfo, deleteRole, getRoleDetail, updateRole } from '@/api/setting'
+import { getRoleList, getCompanyInfo, deleteRole, getRoleDetail, updateRole, addRole } from '@/api/setting'
 import { mapGetters } from 'vuex'
 export default {
   data() {
@@ -224,17 +226,26 @@ export default {
           await updateRole(this.roleForm)
         } else {
           // 新增业务
+          await addRole(this.roleForm)
         }
 
         // 重新拉取数据
         this.getRoleList()
         this.$message.success('操作成功')
-        this.showDialog = false
+        this.showDialog = false // 关闭弹层 => 触发el-dialog的事件close事件
       } catch (error) {
         console.log(error)
       }
     },
-    btnCancel() {}
+    btnCancel() {
+      this.roleForm = {
+        name: '',
+        description: ''
+      }
+      // 移除校验
+      this.$refs.roleForm.resetFields()
+      this.showDialog = false
+    }
   }
 }
 </script>

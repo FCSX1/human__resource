@@ -38,7 +38,11 @@
                 <template slot-scope="{ row }">
                   <el-button size="small" type="success">分配权限</el-button>
 
-                  <el-button size="small" type="primary">编辑</el-button>
+                  <el-button
+                    size="small"
+                    type="primary"
+                    @click="editRole(row.id)"
+                  >编辑</el-button>
 
                   <el-button
                     size="small"
@@ -118,6 +122,29 @@
         </el-tabs>
       </el-card>
     </div>
+    <!-- 放置一个弹层组件 -->
+    <el-dialog title="编辑部门" :visible="showDialog">
+      <el-form
+        :model="roleForm"
+        :rules="rules"
+        label-width="120px"
+      >
+        <el-form-item prop="name" label="角色名称">
+          <el-input v-model="roleForm.name" />
+        </el-form-item>
+
+        <el-form-item label="角色描述">
+          <el-input v-model="roleForm.description" />
+        </el-form-item>
+      </el-form>
+      <!-- 放置一个footer插槽 -->
+      <el-row type="flex" justify="center">
+        <el-col :span="8">
+          <el-button size="small">取消</el-button>
+          <el-button type="primary" size="small">确定</el-button>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
@@ -136,6 +163,17 @@ export default {
       },
       formData: {
         // 公司信息
+      },
+      showDialog: false, // 控制弹层显示
+      roleForm: {
+        name: '',
+        description: ''
+      },
+      rules: {
+        name: [
+          { required: true, message: '角色名称不能为空',
+            trigger: 'blur' }
+        ]
       }
     }
   },
@@ -171,6 +209,9 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    editRole(id) {
+      this.showDialog = true // 显示弹层
     }
   }
 }

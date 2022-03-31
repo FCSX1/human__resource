@@ -47,6 +47,15 @@
           v-model="formData.departmentName"
           style="width: 50%"
           placeholder="请选择部门"
+          @focus="getDepartments"
+        />
+        <!-- 放置一个树形组件 -->
+        <el-tree
+          v-if="showTree"
+          v-loading="loading"
+          :data="treeData"
+          :props="{label:'name'}"
+          :default-expand-all="true"
         />
       </el-form-item>
 
@@ -69,6 +78,8 @@
 </template>
 
 <script>
+import { getDepartments } from '@/api/departments'
+import { tranListToTreeData } from '@/utils'
 export default {
   props: {
     showDialog: {
@@ -136,7 +147,20 @@ export default {
           }
         ],
         correctionTime: ''
-      }
+      },
+      treeData: [], // 定义一个数组来接收树形结构
+      showTree: false, // 默认不显示树形组件
+      loading: false // 加上一个进度条
+    }
+  },
+  methods: {
+    async  getDepartments() {
+      this.showTree = true
+      this.loading = true
+      const { depts } = await getDepartments()
+      // depts是一个数组 它需要转化成树形结构 才可以被 el-tree 显示
+      this.treeData = tranListToTreeData(depts, '')
+      this.loading = false
     }
   }
 }

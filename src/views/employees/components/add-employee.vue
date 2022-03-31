@@ -1,7 +1,11 @@
 <template>
-  <el-dialog title="新增员工" :visible="showDialog">
+  <el-dialog
+    title="新增员工"
+    :visible="showDialog"
+    @close="btnCancel"
+  >
     <!-- 表单 -->
-    <el-form :model="formData" :rules="rules" label-width="120px">
+    <el-form ref="addEmployee" :model="formData" :rules="rules" label-width="120px">
       <el-form-item label="姓名" prop="username">
         <el-input
           v-model="formData.username"
@@ -73,8 +77,8 @@
     <!-- footer插槽 -->
     <el-row slot="footer" type="flex" justify="center">
       <el-col :span="6">
-        <el-button size="small">取消</el-button>
-        <el-button type="primary" size="small">确定</el-button>
+        <el-button size="small" @click="btnCancel">取消</el-button>
+        <el-button type="primary" size="small" @click="btnOK">确定</el-button>
       </el-col>
     </el-row>
   </el-dialog>
@@ -84,6 +88,7 @@
 import { getDepartments } from '@/api/departments'
 import { tranListToTreeData } from '@/utils'
 import EmployeeEnum from '@/api/constant/employees'
+import { addEmployee } from '@/api/employees'
 export default {
   props: {
     showDialog: {
@@ -170,6 +175,36 @@ export default {
     selectNode(node) {
       this.formData.departmentName = node.name
       this.showTree = false
+    },
+    async btnOK() {
+      // 校验表单
+      try {
+        await this.$refs.addEmployee.validate()
+        // 校验成功
+        await addEmployee(this.formData) // 调用新增接口
+        // 通知父组件 更新数据
+        // this.$parent // 父组件的实例
+        this.$parent.getEmployeeList && this.$parent.getEmployeeList() // 直接调用父组件的更新方法
+        this.$parent.showDialog = false
+        // 这里不用重置数据 因为 关闭弹层触发了close事件 close事件绑定了btnCancel方法
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    btnCancel() {
+      this.formData = {
+        username: '',
+        mobile: '',
+        formOfEmployment: '',
+        workNumber: '',
+        departmentName: '',
+        timeOfEntry: '',
+        correctionTime: ''
+      }
+      this.$refs.addEmployee.resetFields() // 移除之前的校验
+      // this.$parent.showDialog = false
+      this.$emit('update:showDialog', false)
+      // update:props名称 这么写的化 可以在父组件 直接用sync修饰符处理
     }
   }
 }

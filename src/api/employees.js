@@ -30,7 +30,7 @@ export function delEmployee(id) {
 }
 
 /*
-*
+*  新增员工
 */
 export function addEmployee(data) {
   return request({

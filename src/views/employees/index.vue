@@ -95,6 +95,7 @@
 import { getEmployeeList, delEmployee } from '@/api/employees'
 import EmployeeEnum from '@/api/constant/employees' // 引入员工的枚举对象
 import AddEmployee from './components/add-employee'
+import { formatDate } from '@/filters'
 
 export default {
   components: { AddEmployee },
@@ -164,7 +165,8 @@ export default {
         const data = this.formatJson(headers, rows) // 返回的data就是 要导出的结构
         excel.export_json_to_excel({
           header: Object.keys(headers),
-          data
+          data,
+          filename: '员工资料'
         })
       // excel.export_json_to_excel({
       //   header: ['姓名', '工资'],
@@ -177,12 +179,22 @@ export default {
       })
     },
     // 将表头数据和数据进行对应
-    // 原来的结构[{}]  导出的data[[]]
+    // 原来的结构[{}] => 导出的data[[]]
     formatJson(headers, rows) {
       return rows.map(item => {
         // item是一个对象 {mobile:13211,username:'张三'}
         //  Object.keys(headers)= ["手机号","姓名".......]
         return Object.keys(headers).map(key => {
+          // 需要判断一下字段
+          if (headers[key] === 'timeOfEntry' || headers[key] === 'correctionTime') {
+            // 格式化日期
+            return formatDate(item[headers[key]])
+          } else if (headers[key] === 'formOfEmployment') {
+            console.log(EmployeeEnum.hireType)
+
+            const obj = EmployeeEnum.hireType.find(obj => obj.id === item[headers[key]])
+            return obj ? obj.value : '未知'
+          }
           return item[headers[key]]
         })
       })

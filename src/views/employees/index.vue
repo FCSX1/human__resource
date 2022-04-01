@@ -163,10 +163,14 @@ export default {
       // 获取员工的接口 页码 每页条数
         const { rows } = await getEmployeeList({ page: 1, size: this.page.total })
         const data = this.formatJson(headers, rows) // 返回的data就是 要导出的结构
+        const multiHeader = [['姓名', '主要信息', '', '', '', '', '部门']]
+        const merges = ['A1:A2', 'B1:F1', 'G1:G2']
         excel.export_json_to_excel({
           header: Object.keys(headers),
           data,
-          filename: '员工资料'
+          filename: '员工资料',
+          multiHeader, // 复杂表头
+          merges // 合并选项
         })
       // excel.export_json_to_excel({
       //   header: ['姓名', '工资'],

@@ -16,7 +16,7 @@ export default {
     }
   },
   {
-    path: 'detail/:id?', // ?的含义是表示该参数可传可不传  动态路由参数  /employees/detail/123  /employees/detail
+    path: 'detail/:id', // ?的含义是表示该参数可传可不传  动态路由参数  /employees/detail/123  /employees/detail
     component: () => import('@/views/employees/MyDetail'),
     hidden: true, // 表示该内容不在左侧菜单显示
     meta: {

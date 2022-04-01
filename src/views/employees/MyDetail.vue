@@ -6,17 +6,33 @@
         <el-tabs>
           <el-tab-pane label="登录账户设置">
             <!-- 放置内容 -->
-            <el-form label-width="120px">
-              <el-form-item label="用户名">
-                <el-input style="width: 300px" />
+            <el-form
+              ref="userForm"
+              :rules="rules"
+              :model="userInfo"
+              label-width="120px"
+            >
+              <el-form-item
+                label="用户名"
+                prop="username"
+              >
+                <el-input v-model="userInfo.username" style="width: 300px" />
               </el-form-item>
 
-              <el-form-item label="密码">
-                <el-input style="width: 300px" type="password" />
+              <el-form-item
+
+                label="密码"
+                prop="password2"
+              >
+                <el-input
+                  v-model="userInfo.password2"
+                  style="width: 300px"
+                  type="password"
+                />
               </el-form-item>
 
               <el-form-item>
-                <el-button type="primary">保存</el-button>
+                <el-button type="primary" @click="saveUser">保存</el-button>
               </el-form-item>
             </el-form>
           </el-tab-pane>
@@ -35,8 +51,48 @@
 </template>
 
 <script>
+import { getUserDetailById } from '@/api/user'
+import { saveUserDetailById } from '@/api/employees'
 export default {
-
+  data() {
+    return {
+      userId: this.$route.params.id, // 直接将路由中的参数赋值给data中的属性
+      userInfo: {
+        username: '',
+        password2: '' // 为什么叫password2 因为读取出来的password是密文
+      },
+      rules: {
+        username: [
+          {
+            required: true, message: '姓名不能为空', trigger: 'blur'
+          }
+        ],
+        password2: [
+          {
+            required: true, message: '密码不能为空', trigger: 'blur'
+          },
+          {
+            min: 6, max: 16, message: '密码长度为6-16位', trigger: 'blur'
+          }
+        ]
+      }
+    }
+  },
+  created() {
+    this.getUserDetailById()
+  },
+  methods: {
+    async getUserDetailById() {
+      this.userInfo = await getUserDetailById(this.userId)
+    },
+    saveUser() {
+      // 调用方法 应该先校验
+      this.$refs.userForm.validate().then(async() => {
+        await saveUserDetailById({ ...this.userInfo, password: this.userInfo.password2 })
+        this.$message.success('修改用户信息成功')
+      })
+    }
+  }
 }
 </script>
 

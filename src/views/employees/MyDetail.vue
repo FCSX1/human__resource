@@ -47,6 +47,7 @@
 
           <el-tab-pane label="岗位信息">
             <!-- 放置内容 -->
+            <component :is="JonComponent" />
           </el-tab-pane>
         </el-tabs>
       </el-card>
@@ -58,13 +59,16 @@
 import { getUserDetailById } from '@/api/user'
 import { saveUserDetailById } from '@/api/employees'
 import UserInfo from './components/user-info.vue'
+import JobInfo from './components/job-info.vue'
 export default {
   components: {
-    UserInfo
+    UserInfo,
+    JobInfo
   },
   data() {
     return {
       UserComponent: 'user-info',
+      JonComponent: 'job-info',
       userId: this.$route.params.id, // 直接将路由中的参数赋值给data中的属性
       userInfo: {
         username: '',

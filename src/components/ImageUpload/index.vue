@@ -10,6 +10,7 @@
       :on-preview="preview"
       :on-remove="handleRemove"
       :before-upload="beforeUpload"
+      :http-request="upload"
       :on-change="changeFile"
       :file-list="fileList"
       :class="{ disabled: fileComputed }"
@@ -27,6 +28,12 @@
 </template>
 
 <script>
+import COS from 'cos-js-sdk-v5' // 引入腾讯云COS包
+// 实例化COS对象
+const cos = new COS({
+  SecretId: 'AKIDFJ7fwxiCAsISMyJOCjzziAKDqELCn7Bx', // 身份识别 ID
+  SecretKey: 'XooXy93g28wTjjTw83i6D2btud6Jq65n' // 身份密钥
+})
 export default {
   data() {
     return {
@@ -75,6 +82,23 @@ export default {
         return false
       }
       return true // 最后一定要return true
+    },
+    // 进行上传操作
+    upload(params) {
+      if (params.file) {
+        // 执行上传操作
+        cos.putObject({
+          // 上传到腾讯云 => 那个存储桶 那个地域的存储桶 文件 格式 名称 回调
+          Bucket: 'rz123-1310814593', // 存储桶
+          Region: 'ap-guangzhou', // 地域
+          Key: params.file.name, // 文件名
+          Body: params.file, // 要上传的文件对象
+          StorageClass: 'STANDARD' // 上传的模式类型 直接默认 标准模式即可
+        }, function(err, data) {
+          // data返回数据之后 应该如何处理
+          console.log(err || data)
+        })
+      }
     }
   }
 }

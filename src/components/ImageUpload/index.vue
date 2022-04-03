@@ -8,6 +8,7 @@
       action="#"
       :on-preview="preview"
       :file-list="fileList"
+      :class="{ disabled : fileComputed }"
     >
       <i class="el-icon-plus" />
     </el-upload>
@@ -30,10 +31,15 @@ export default {
       imgUrl: ''
     }
   },
+  computed: {
+    // 如果它为true 表示就不应该显示 + 号上传了
+    fileComputed() {
+      return this.fileList.length === 1
+    }
+  },
   methods: {
     // 点击预览事件
     preview(file) {
-      console.log(file.url)
       this.imgUrl = file.url
       this.showDialog = true
     }
@@ -41,6 +47,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.disabled .el-upload--picture-card {
+    display: none;
+}
 </style>

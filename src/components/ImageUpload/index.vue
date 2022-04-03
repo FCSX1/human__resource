@@ -9,6 +9,7 @@
       action="#"
       :on-preview="preview"
       :on-remove="handleRemove"
+      :before-upload="beforeUpload"
       :on-change="changeFile"
       :file-list="fileList"
       :class="{ disabled: fileComputed }"
@@ -57,6 +58,23 @@ export default {
       // this.fileList = fileList.map(item => item) 这里为什么暂时不成功？ 因为现在还没有上传 所有第二次进来的数据 一定是个空的
       // 如果完成上传动作了 第一次进入 和第二次进去的fileList的长度应该都是1 应该都有数据
       // 上传成功 => 数据才能进来 => 腾讯云cos
+    },
+    beforeUpload(file) {
+      // 先检查文件类型
+      const types = ['image/jpeg', 'image/gif', 'image/bmp', 'image/png']
+      if (!types.some(item => item === file.type)) {
+        // 如果不存在
+        this.$message.error('上传图片只能是 JPG、GTF、BMP、PNG 格式!')
+        return false // 上传终止
+      }
+      // 检查文件大小  限制大小为5M  1M = 1024KB
+      const maxSize = 5 * 1024 * 1024
+      if (file.size > maxSize) {
+        // 超过了限制的文件大小
+        this.$message.error('上传的图片大小不能大于5M')
+        return false
+      }
+      return true // 最后一定要return true
     }
   }
 }

@@ -472,7 +472,7 @@ export default {
   methods: {
     async getUserDetailById() {
       this.userInfo = await getUserDetailById(this.userId)
-      if (this.userInfo.staffPhoto) {
+      if (this.userInfo.staffPhoto && this.userInfo.staffPhoto.trim()) {
         // 有值就表示 已经有了一个上传成功的图片了
         // 上传成功的图片 upload: true 表示 该图片已经上传成功了
         this.$refs.staffPhoto.fileList = [{ url: this.userInfo.staffPhoto, upload: true }]
@@ -480,16 +480,31 @@ export default {
     },
     async  getPersonalDetail() {
       this.formData = await getPersonalDetail(this.userId)
-      if (this.formData.staffPhoto) {
+      if (this.formData.staffPhoto && this.formData.staffPhoto.trim()) {
         this.$refs.myStaffPhoto.fileList = [{ url: this.formData.staffPhoto, upload: true }]
       }
     },
     async saveUser() {
-      await saveUserDetailById(this.userInfo)
+      // 先去获取头像中地址
+      const fileList = this.$refs.staffPhoto.fileList // 数组
+      // 应该做一个判断 判断当前的图片有没有上传完成
+      if (fileList.some(item => !item.upload)) {
+        // 说明此时有图片还没有上传完成
+        this.$message.warning('图片还未上传完成')
+        return
+      }
+      // staffPhoto由于接口问题 必须 给一个 有空格的字符串才能存进去
+      await saveUserDetailById({ ...this.userInfo, staffPhoto: fileList.length ? fileList[0].url : ' ' })
       this.$message.success('保存用户基本信息成功')
     },
     async savePersonal() {
-      await updatePersonal({ ...this.formData, id: this.userId })
+      const fileList = this.$refs.myStaffPhoto.fileList
+      if (fileList.some(item => !item.upload)) {
+        // 说明此时有图片还没有上传完成
+        this.$message.warning('图片还未上传完成')
+        return
+      }
+      await updatePersonal({ ...this.formData, staffPhoto: fileList.length ? fileList[0].url : ' ' })
       this.$message.success('保存用户基础信息成功')
     }
 

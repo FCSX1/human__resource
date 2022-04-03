@@ -56,7 +56,7 @@ export default {
       this.fileList = fileList.map(item => item)
       // this.fileList = fileList.map(item => item) 这里为什么暂时不成功？ 因为现在还没有上传 所有第二次进来的数据 一定是个空的
       // 如果完成上传动作了 第一次进入 和第二次进去的fileList的长度应该都是1 应该都有数据
-      // 上传成功 => 数据才能进来
+      // 上传成功 => 数据才能进来 => 腾讯云cos
     }
   }
 }

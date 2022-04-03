@@ -248,6 +248,9 @@ export default {
         workingTimeForTheFirstTime: '' // 首次参加工作时间
       }
     }
+  },
+  methods: {
+    saveJob() {}
   }
 }
 </script>

@@ -69,11 +69,15 @@
           <!-- <template slot-scope="{ row }"> -->
           <template v-slot="{row}">
             <el-button type="text" size="small" @click="$router.push(`/employyees/detail/${row.id}`)">查看</el-button>
-
             <el-button type="text" size="small">转正</el-button>
             <el-button type="text" size="small">调岗</el-button>
             <el-button type="text" size="small">离职</el-button>
-            <el-button type="text" size="small">角色</el-button>
+
+            <el-button
+              type="text"
+              size="small"
+              @click="editRole(row.id)"
+            >角色</el-button>
 
             <el-button
               type="text"
@@ -107,6 +111,12 @@
         <canvas ref="myCanvas" />
       </el-row>
     </el-dialog>
+    <!-- 放置分配组件 -->
+    <assign-role
+      ref="assignRole"
+      :show-role-dialog.sync="showRoleDialog"
+      :user-id="userId"
+    />
   </div>
 </template>
 
@@ -115,9 +125,10 @@ import { getEmployeeList, delEmployee } from '@/api/employees'
 import EmployeeEnum from '@/api/constant/employees' // 引入员工的枚举对象
 import AddEmployee from './components/add-employee'
 import { formatDate } from '@/filters'
+import AssignRole from './components/assign-role'
 import QrCode from 'qrcode'
 export default {
-  components: { AddEmployee },
+  components: { AddEmployee, AssignRole },
   data() {
     return {
       list: [], // 接收数组
@@ -128,7 +139,9 @@ export default {
       },
       loading: false, // 显示遮罩层
       showDialog: false, // 默认关闭弹层
-      showCodeDialog: false // 显示二维码弹层
+      showCodeDialog: false, // 显示二维码弹层
+      showRoleDialog: false, // 显示分配角色弹层
+      userId: null // 定义一个userId
     }
   },
   created() {
@@ -237,6 +250,12 @@ export default {
       } else {
         this.$message.warning('该用户还未上传头像')
       }
+    },
+    async editRole(id) {
+      // 弹出层
+      this.roleId = id // props赋值 props赋值渲染是异步的
+      await this.$refs.assignRole.getUserDetailById(id) // 调用子组件的方法
+      this.showRoleDialog = true
     }
   }
 }

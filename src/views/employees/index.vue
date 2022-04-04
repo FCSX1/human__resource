@@ -23,6 +23,18 @@
       <el-table v-loading="loading" :data="list">
         <el-table-column type="index" label="序号" sortable="" />
         <el-table-column label="姓名" prop="username" sortable="" />
+        <el-table-column width="120px" label="头像" align="center">
+          <!-- 插槽 -->
+          <!-- <template slot-scope="{row}" /> -->
+          <template v-slot="{ row }">
+            <img
+              v-imagerror="require('@/assets/common/head.jpg')"
+              :src="row.staffPhoto"
+              style="border-radius: 50%; width: 100px; height: 100px; padding: 10px"
+              alt=""
+            >
+          </template>
+        </el-table-column>
         <el-table-column label="工号" prop="workNumber" sortable="" />
 
         <el-table-column

@@ -507,7 +507,6 @@ export default {
       await updatePersonal({ ...this.formData, staffPhoto: fileList.length ? fileList[0].url : ' ' })
       this.$message.success('保存用户基础信息成功')
     }
-
   }
 }
 </script>

@@ -253,7 +253,7 @@ export default {
     },
     async editRole(id) {
       // 弹出层
-      this.roleId = id // props赋值 props赋值渲染是异步的
+      this.userId = id // props赋值 props赋值渲染是异步的
       await this.$refs.assignRole.getUserDetailById(id) // 调用子组件的方法
       this.showRoleDialog = true
     }

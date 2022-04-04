@@ -1,5 +1,9 @@
 <template>
-  <el-dialog title="分配角色" :visible="showRoleDialog">
+  <el-dialog
+    title="分配角色"
+    :visible="showRoleDialog"
+    @close="btnCancel"
+  >
     <!-- 多选框组 v-model双向绑定 -->
     <el-checkbox-group v-model="roleIds">
       <!-- 要循环的选项 -->
@@ -15,8 +19,8 @@
     <!-- 定义footer的插槽 -->
     <el-row slot="footer" type="flex" justify="center">
       <el-col :span="6">
-        <el-button type="primary" size="small">确定</el-button>
-        <el-button size="small">取消</el-button>
+        <el-button type="primary" size="small" @click="btnOK">确定</el-button>
+        <el-button size="small" @click="btnCancel">取消</el-button>
       </el-col>
     </el-row>
   </el-dialog>
@@ -25,6 +29,7 @@
 <script>
 import { getRoleList } from '@/api/setting'
 import { getUserDetailById } from '@/api/user'
+import { assignRoles } from '@/api/employees'
 export default {
   props: {
     showRoleDialog: {
@@ -61,6 +66,18 @@ export default {
       const { roleIds } = await getUserDetailById(id) // 将用户所拥有的角色赋值给当前用户的对象
       // 获取当前用户的角色id
       this.roleIds = roleIds
+    },
+    async btnOK() {
+      await assignRoles({ id: this.userId, roleIds: this.roleIds }) // 保存用户的角色
+      // 关闭弹层
+      // this.$emit('update:showRoleDialog', false)
+      this.$parent.showRoleDialog = false
+    },
+    btnCancel() {
+      // 取消
+
+      this.roleIds = [] // 重置数组 将它还原成空
+      this.$emit('update:showRoleDialog', false)
     }
   }
 }

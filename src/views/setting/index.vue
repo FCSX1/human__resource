@@ -153,12 +153,17 @@
       </el-row>
     </el-dialog>
     <!-- 放置一个弹层 -->
-    <el-dialog title="分配权限" :visible="showPermDialog">
+    <el-dialog
+      title="分配权限"
+      :visible="showPermDialog"
+      @close="btnPermCance"
+    >
       <!-- 权限是一颗树 -->
       <!-- 将数据绑定到组件上 -->
       <!-- check-strictly 如果为true 那表示父子勾选时 不互相关联 如果为false就互相关联 -->
       <!-- id作为唯一标识 -->
       <el-tree
+        ref="permTree"
         :data="permData"
         :props="defaultProps"
         :default-expand-all="true"
@@ -170,8 +175,8 @@
       <!-- 确定 取消 -->
       <el-row slot="footer" type="flex" justify="center">
         <el-col :span="6">
-          <el-button type="primary" size="small">确定</el-button>
-          <el-button size="small">取消</el-button>
+          <el-button type="primary" size="small" @click="btnPermOK">确定</el-button>
+          <el-button size="small" @click="btnPermCance">取消</el-button>
         </el-col>
       </el-row>
     </el-dialog>
@@ -179,7 +184,7 @@
 </template>
 
 <script>
-import { getRoleList, getCompanyInfo, deleteRole, getRoleDetail, updateRole, addRole } from '@/api/setting'
+import { getRoleList, getCompanyInfo, deleteRole, getRoleDetail, updateRole, addRole, assignPerm } from '@/api/setting'
 import { getPermissionList } from '@/api/permission'
 import { tranListToTreeData } from '@/utils'
 import { mapGetters } from 'vuex'
@@ -293,6 +298,16 @@ export default {
       this.selectCheck = permIds // 将当前角色所拥有的权限id赋值
       // const result = await getPermissionList() // 获取所有权限点
       this.showPermDialog = true
+    },
+    async  btnPermOK() {
+      // 调用el-tree的方法
+      await assignPerm({ permIds: this.$refs.permTree.getCheckedKeys(), id: this.roleId })
+      this.$message.success('分配权限成功')
+      this.showPermDialog = false // 关闭弹层
+    },
+    btnPermCance() {
+      this.selectCheck = [] // 重置数据
+      this.showPermDialog = false
     }
   }
 }

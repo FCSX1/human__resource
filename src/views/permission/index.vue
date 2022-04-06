@@ -148,12 +148,12 @@ export default {
           message: '权限标识 不能为空',
           trigger: 'blur'
         }]
-      },
-      computed: {
-        showText() {
-          return this.formData.id ? '编辑权限' : '新增权限'
-        }
       }
+    }
+  },
+  computed: {
+    showText() {
+      return this.formData.id ? '编辑权限' : '新增权限'
     }
   },
   created() {

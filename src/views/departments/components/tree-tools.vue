@@ -22,7 +22,11 @@
             <!-- 具名插槽 -->
             <el-dropdown-menu slot="dropdown">
               <!-- 下拉选项 -->
-              <el-dropdown-item command="add">添加子部门</el-dropdown-item>
+              <!-- v-if="checkPermission('departments')" -->
+              <el-dropdown-item
+
+                command="add"
+              >添加子部门</el-dropdown-item>
               <el-dropdown-item v-if="!isRoot" command="edit">编辑部门</el-dropdown-item>
               <el-dropdown-item v-if="!isRoot" command="del">删除部门</el-dropdown-item>
             </el-dropdown-menu>

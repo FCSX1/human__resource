@@ -15,6 +15,7 @@ import router from './router'
 import Components from '@/components'
 import * as directives from '@/directives'
 import * as filters from '@/filters'
+import checkPermission from '@/mixin/checkPermission'
 import '@/icons' // icon
 import '@/permission' // permission control
 // set ElementUI lang to EN
@@ -31,6 +32,8 @@ Object.keys(filters).forEach(key => {
 })
 // 注册自定义组件
 Vue.use(Components)
+// 全局混入检查对象
+Vue.mixin(checkPermission) // 表示所有的组件都拥有了检查的方法
 Vue.config.productionTip = false
 
 new Vue({

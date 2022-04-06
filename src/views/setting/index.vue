@@ -37,7 +37,11 @@
               <el-table-column align="center" label="操作">
                 <!-- 作用域插槽 -->
                 <template slot-scope="{ row }">
-                  <el-button size="small" type="success">分配权限</el-button>
+                  <el-button
+                    size="small"
+                    type="success"
+                    @click="assignPerm(row.id)"
+                  >分配权限</el-button>
 
                   <el-button
                     size="small"
@@ -148,11 +152,36 @@
         </el-col>
       </el-row>
     </el-dialog>
+    <!-- 放置一个弹层 -->
+    <el-dialog title="分配权限" :visible="showPermDialog">
+      <!-- 权限是一颗树 -->
+      <!-- 将数据绑定到组件上 -->
+      <!-- check-strictly 如果为true 那表示父子勾选时 不互相关联 如果为false就互相关联 -->
+      <!-- id作为唯一标识 -->
+      <el-tree
+        :data="permData"
+        :props="defaultProps"
+        :default-expand-all="true"
+        :check-strictly="true"
+        :show-checkbox="true"
+        :default-checked-keys="selectCheck"
+        node-key="id"
+      />
+      <!-- 确定 取消 -->
+      <el-row slot="footer" type="flex" justify="center">
+        <el-col :span="6">
+          <el-button type="primary" size="small">确定</el-button>
+          <el-button size="small">取消</el-button>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getRoleList, getCompanyInfo, deleteRole, getRoleDetail, updateRole, addRole } from '@/api/setting'
+import { getPermissionList } from '@/api/permission'
+import { tranListToTreeData } from '@/utils'
 import { mapGetters } from 'vuex'
 export default {
   data() {
@@ -168,6 +197,7 @@ export default {
         // 公司信息
       },
       showDialog: false, // 控制弹层显示
+      showPermDialog: false, // 控制分配权限弹层的显示或者隐藏
       roleForm: {
         name: '',
         description: ''
@@ -177,7 +207,13 @@ export default {
           { required: true, message: '角色名称不能为空',
             trigger: 'blur' }
         ]
-      }
+      },
+      permData: [], // 接收权限数据
+      defaultProps: {
+        label: 'name'
+      }, // 定义显示字段的名称 和 子属性的字段名称
+      roleId: null, // 用来记录当前分配权限的id
+      selectCheck: [] // 用来记录当前的权限点的标识
     }
   },
   computed: {
@@ -245,6 +281,18 @@ export default {
       // 移除校验
       this.$refs.roleForm.resetFields()
       this.showDialog = false
+    },
+    // 弹出层
+    // 获取权限点数据 在点击的时候调用 获取权限点数据
+    async  assignPerm(id) {
+      this.permData = tranListToTreeData(await getPermissionList(), '0') // 转化list到树形数据
+      this.roleId = id
+      // 应该去获取 这个id的 权限点
+      // 有id id应该先记录下来
+      const { permIds } = await getRoleDetail(id) // permIds是当前角色所拥有的权限点数据
+      this.selectCheck = permIds // 将当前角色所拥有的权限id赋值
+      // const result = await getPermissionList() // 获取所有权限点
+      this.showPermDialog = true
     }
   }
 }

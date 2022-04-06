@@ -36,6 +36,59 @@
         </el-table-column>
       </el-table>
     </div>
+    <!-- 新建编辑弹层 -->
+    <el-dialog :visible="showDialog" title="新增编辑">
+      <!-- 表单 -->
+      <el-form label-width="120px">
+        <el-form-item label="名称">
+          <el-input
+            v-model="formData.name"
+            style="width: 90%"
+          />
+        </el-form-item>
+
+        <el-form-item label="标识">
+          <el-input
+            v-model="formData.code"
+            style="width: 90%"
+          />
+        </el-form-item>
+
+        <el-form-item label="描述">
+          <el-input
+            v-model="formData.description"
+            style="width: 90%"
+          />
+        </el-form-item>
+
+        <el-form-item label="开启">
+          <!-- 当值为1时 激活 当值为0时 不激活 -->
+          <el-switch
+            v-model="formData.enVisible"
+            active-value="1"
+            :inactive-value="0"
+            style="width: 90%"
+          />
+        </el-form-item>
+      </el-form>
+      <!-- 底部的确定和取消 -->
+      <el-row slot="footer" type="flex" justify="center">
+        <el-col :span="6">
+          <el-button
+            type="primary"
+            size="small"
+          >
+            确定
+          </el-button>
+
+        </el-col>
+        <el-col :span="6">
+          <el-button>
+            取消
+          </el-button>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
@@ -45,7 +98,16 @@ import { tranListToTreeData } from '@/utils'
 export default {
   data() {
     return {
-      list: []
+      list: [],
+      showDialog: true,
+      formData: {
+        name: '', // 名称
+        code: '', // 标识
+        description: '', // 描述
+        type: '', // 类型 该类型 不需要显示 因为点击添加的时候已经知道类型了
+        pid: '', // 因为做的是树 需要知道添加到了那个节点下
+        enVisible: '0' // 开门
+      }
     }
   },
   created() {
@@ -53,7 +115,7 @@ export default {
   },
   methods: {
     async  getPermissionList() {
-      // 记那个数据转化成了 待chilren的树形结构
+      // 将数据转化成了 带chilren的树形结构
       this.list = tranListToTreeData(await getPermissionList(), '0')
     }
   }

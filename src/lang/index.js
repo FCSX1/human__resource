@@ -11,6 +11,7 @@ import customEN from './en' // 自定义语言包
 Vue.use(VueI18n) // 完成全局注册
 export default new VueI18n({
   // i18n的选项
+  // locale决定当前的多语言类型 假设要切换多语言 只需要设置该属性就可以了
   locale: Cookie.get('language') || 'zh', // 指的是当前的多语言的类型 随意定义的字符串 中文 zh / 鸟语 en
   messages: {
     zh: {

@@ -166,15 +166,32 @@ export default {
       const obj = EmployeeEnum.hireType.find(item => item.id === cellValue)
       return obj ? obj.value : '未知'
     },
+    // async delEmployee(id) {
+    //   try {
+    //     await this.$confirm('确定删除该员工吗？')
+    //     // 点击了确定
+    //     await delEmployee(id)
+    //     this.$message.success('删除员工成功')
+    //     this.getEmployeeList() // 重新拉去数据
+    //   } catch (error) {
+    //     console.log(error)
+    //   }
+    // },
+    // 删除员工
     async delEmployee(id) {
       try {
-        await this.$confirm('确定删除该员工吗？')
-        // 点击了确定
-        await delEmployee(id)
-        this.$message.success('删除员工成功')
-        this.getEmployeeList() // 重新拉去数据
-      } catch (error) {
-        console.log(error)
+        await this.$confirm('确认要删除吗')
+        await delEmployee(id) // 调用删除接口
+        // 执行完删除接口 则 后台删除完数据 但是我们没有重新调用接口获取数据所有还没有更新vue中获取到的数据
+        // 这时进行判断
+        // 判断当前页码是否只剩下一条数据 则这条数据就是被我们刚刚删除但是还没有更新时的数据 再判断 当前页码是否为1
+        // 如果当前页码为1 则表示所有数据已删除完 若不为1 则获取上一页数据
+        if (this.list.length === 1 && this.page.page !== 1) {
+          --this.page.page
+        }
+        this.getEmployeeList() // 重新拉取数据
+      } catch (err) {
+        this.$message.error('已取消')
       }
     },
     exportData() {

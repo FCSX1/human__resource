@@ -20,9 +20,9 @@ const isProd = process.env.NODE_ENV === 'production' // 判断是否是生产环
 if (isProd) {
   // 只有生产环境 才有必要 去做排除和cdn的注入
   externals = {
+    'vue': 'Vue',
     'element-ui': 'ELEMENT',
-    'xlsx': 'XLSX',
-    'vue': 'Vue'
+    'xlsx': 'XLSX'
   }
   cdn = {
     css: [
@@ -32,7 +32,7 @@ if (isProd) {
     ],
     js: [
       // vue must at first!
-      'https://unpkg.com/vue/dist/vue.js', // vuejs
+      'https://cdn.jsdelivr.net/npm/vue@2', // vuejs
       // element-ui js
       'https://unpkg.com/element-ui/lib/index.js', // elementUI
       'https://cdn.jsdelivr.net/npm/xlsx@0.16.6/dist/jszip.min.js',

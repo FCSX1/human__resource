@@ -99,7 +99,13 @@ module.exports = {
         include: 'initial'
       }
     ])
-
+    // 注入cdn变量
+    // 这行代码 会在执行打包的时候 执行 就会将cdn变量注入到 html模版中
+    config.plugin('html').tap((args) => {
+      // args 是注入html模版的一个变量
+      args[0].cdn = cdn // 后面的cdn就是定义的变量
+      return args // 需要返回这个参数
+    })
     // when there are many pages, it will cause too many meaningless requests
     config.plugins.delete('prefetch')
 

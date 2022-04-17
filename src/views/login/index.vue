@@ -135,13 +135,19 @@ export default {
 
       this.$refs.loginForm.validate(async isOK => {
         if (isOK) {
-          this.loading = true
-          // 只有校验通过了 我们才去调用action
-          await this['user/login'](this.loginForm)
-          // 应该登录成功之后在跳转主页
-          // async标记的函数实际上是一个promise对象
-          // await 下面的代码 都是成功执行的代码
-          this.$router.push('/')
+          try {
+            this.loading = true
+            // 只有校验通过了 我们才去调用action
+            await this['user/login'](this.loginForm)
+            // 应该登录成功之后在跳转主页
+            // async标记的函数实际上是一个promise对象
+            // await 下面的代码 都是成功执行的代码
+            this.$router.push('/')
+          } catch (error) {
+            console.log(error)
+          } finally {
+            this.loading = false
+          }
         }
       })
       // ref 可以获取一个元素的DOM对象

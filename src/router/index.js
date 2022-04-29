@@ -102,6 +102,10 @@ const router = createRouter() // 实例化一个路由
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
   const newRouter = createRouter()
+  // router的matcher属性是最重要的属性
+  // 由于router的matcher属性是其最重要的属性
+  // 所以如果要实现路由规则的替换，我们是不能通过简单的调用方法实现
+  // 所以如果要实现路由规则的替换或者移除，只能更换matcher属性
   router.matcher = newRouter.matcher // reset router
 }
 
